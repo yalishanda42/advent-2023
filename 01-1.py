@@ -21,13 +21,11 @@ import sys
 
 strings = sys.stdin.readlines()
 
-numbers = []
+result = 0
 
 for string in strings:
     digits = [s for s in string if s.isdigit()]
     number = int("".join((digits[0], digits[-1])))
-    numbers.append(number)
-
-result = sum(numbers)
+    result += number
 
 sys.stdout.write(str(result))

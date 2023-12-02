@@ -51,7 +51,7 @@ def replaceSpelledOutDigits(line: String): String =
     replaceSpelledOutDigits("")(line)
 
 @main 
-def main() =
+def task01_2() =
     val lines: Array[String] = Iterator
         .continually(StdIn.readLine())
         .takeWhile(_ != null)

@@ -29,51 +29,52 @@ Determine which games would have been possible if the bag had been loaded with o
 
 import scala.io.StdIn
 
-enum Color:
-    case Red, Green, Blue
+object Task2Part1:
+    enum Color:
+        case Red, Green, Blue
 
-object Color:
-    def fromString(str: String): Color = 
-        str.toLowerCase match
-            case "red" => Red
-            case "green" => Green
-            case "blue" => Blue
+    object Color:
+        def fromString(str: String): Color = 
+            str.toLowerCase match
+                case "red" => Red
+                case "green" => Green
+                case "blue" => Blue
 
-case class Pick(cubes: Map[Color, Int])
+    case class Pick(cubes: Map[Color, Int])
 
-case class Game(id: Int, picks: Array[Pick]):
-    def isPossible: Boolean =
-        val maxRed = picks.map(_.cubes.getOrElse(Color.Red, 0)).max
-        val maxGreen = picks.map(_.cubes.getOrElse(Color.Green, 0)).max
-        val maxBlue = picks.map(_.cubes.getOrElse(Color.Blue, 0)).max
-        maxRed <= 12 && maxGreen <= 13 && maxBlue <= 14
+    case class Game(id: Int, picks: Array[Pick]):
+        def isPossible: Boolean =
+            val maxRed = picks.map(_.cubes.getOrElse(Color.Red, 0)).max
+            val maxGreen = picks.map(_.cubes.getOrElse(Color.Green, 0)).max
+            val maxBlue = picks.map(_.cubes.getOrElse(Color.Blue, 0)).max
+            maxRed <= 12 && maxGreen <= 13 && maxBlue <= 14
 
-def parseGame(line: String): Game =
-    val id = line.split(":")(0).drop(5).toInt
-    val picks = line
-        .dropWhile(_ != ':')
-        .drop(1)
-        .split(";")
-        .map(_.trim)
-        .filter(_.nonEmpty)
-        .map { gameString =>
-            val picksStrArray = gameString.split(", ")
-            val picks = picksStrArray.map { pickStr =>
-                val Array(n, color) = pickStr.split(" ")
-                Color.fromString(color) -> n.toInt
+    def parseGame(line: String): Game =
+        val id = line.split(":")(0).drop(5).toInt
+        val picks = line
+            .dropWhile(_ != ':')
+            .drop(1)
+            .split(";")
+            .map(_.trim)
+            .filter(_.nonEmpty)
+            .map { gameString =>
+                val picksStrArray = gameString.split(", ")
+                val picks = picksStrArray.map { pickStr =>
+                    val Array(n, color) = pickStr.split(" ")
+                    Color.fromString(color) -> n.toInt
+                }
+                Pick(picks.toMap)
             }
-            Pick(picks.toMap)
-        }
-    Game(id, picks)
+        Game(id, picks)
 
-@main
-def task02_1() =
-    val input = Iterator
-        .continually(StdIn.readLine())
-        .takeWhile(_ != null)
-        .toList
-    val games = input.map(parseGame)
-    val possibleGames = games.filter(_.isPossible)
-    val sum = possibleGames.map(_.id).sum
+    @main
+    def task02_1() =
+        val input = Iterator
+            .continually(StdIn.readLine())
+            .takeWhile(_ != null)
+            .toList
+        val games = input.map(parseGame)
+        val possibleGames = games.filter(_.isPossible)
+        val sum = possibleGames.map(_.id).sum
 
-    println(sum)
+        println(sum)
